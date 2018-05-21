@@ -35,3 +35,6 @@ pub use self::font::Font;
 
 mod feature;
 pub use self::feature::Features;
+
+mod tag;
+pub use self::tag::Tag;

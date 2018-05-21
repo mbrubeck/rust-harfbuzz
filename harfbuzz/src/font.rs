@@ -9,6 +9,7 @@
 
 #![allow(missing_docs)]
 
+use {Blob, Tag};
 use std;
 use sys;
 
@@ -32,6 +33,14 @@ impl Font {
         let raw = self.raw;
         std::mem::forget(self);
         raw
+    }
+
+    pub fn get_table(&self, tag: Tag) -> Blob {
+        unsafe {
+            let face = sys::hb_font_get_face(self.raw);
+            let blob = sys::hb_face_reference_table(face, tag.0);
+            Blob::from_raw(blob)
+        }
     }
 }
 
