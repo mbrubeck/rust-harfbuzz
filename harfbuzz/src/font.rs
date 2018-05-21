@@ -12,6 +12,7 @@
 use {Blob, Tag};
 use std;
 use sys;
+use util;
 
 pub struct Font {
     raw: *mut sys::hb_font_t,
@@ -41,6 +42,16 @@ impl Font {
             let blob = sys::hb_face_reference_table(face, tag.0);
             Blob::from_raw(blob)
         }
+    }
+
+    pub fn set_ppem(&mut self, x_ppem: u32, y_ppem: u32) {
+        unsafe { sys::hb_font_set_ppem(self.raw, x_ppem, y_ppem); }
+    }
+
+    pub fn set_scale(&mut self, x_scale: f64, y_scale: f64) {
+        let x_scale = util::float_to_fixed(x_scale);
+        let y_scale = util::float_to_fixed(y_scale);
+        unsafe { sys::hb_font_set_scale(self.raw, x_scale, y_scale); }
     }
 }
 
