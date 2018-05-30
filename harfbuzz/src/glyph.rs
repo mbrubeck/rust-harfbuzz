@@ -12,6 +12,7 @@
 use std;
 use sys;
 
+#[derive(Copy, Clone)]
 pub struct Glyphs<'a> {
     infos: *const sys::hb_glyph_info_t,
     positions: *const sys::hb_glyph_position_t,
@@ -34,6 +35,9 @@ impl<'a> Glyphs<'a> {
     }
 
     #[inline]
+    pub fn len(&self) -> usize { self.len }
+
+    #[inline]
     pub fn get(&self, idx: usize) -> Glyph<'a> {
         assert!(idx < self.len, "Index {} is out of range", idx);
         unsafe { self.get_unchecked(idx) }
@@ -49,6 +53,7 @@ impl<'a> Glyphs<'a> {
     }
 }
 
+#[derive(Copy, Clone)]
 pub struct Glyph<'a> {
     info: *const sys::hb_glyph_info_t,
     position: *const sys::hb_glyph_position_t,
@@ -77,5 +82,33 @@ impl<'a> Glyph<'a> {
     /// Access to the raw `hb_glyph_position_t`
     pub fn raw_position(&self) -> &sys::hb_glyph_position_t {
         unsafe { &*self.position }
+    }
+}
+
+impl<'a> IntoIterator for Glyphs<'a> {
+    type Item = Glyph<'a>;
+    type IntoIter = GlyphIterator<'a>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        GlyphIterator { glyphs: self, pos: 0 }
+    }
+}
+
+pub struct GlyphIterator<'a> {
+    glyphs: Glyphs<'a>,
+    pos: usize,
+}
+
+impl<'a> Iterator for GlyphIterator<'a> {
+    type Item = Glyph<'a>;
+
+    #[inline]
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.pos == self.glyphs.len {
+            return None;
+        }
+        let glyph = unsafe { self.glyphs.get_unchecked(self.pos) };
+        self.pos += 1;
+        Some(glyph)
     }
 }
