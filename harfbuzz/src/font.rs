@@ -49,8 +49,8 @@ impl Font {
     }
 
     pub fn set_scale(&mut self, x_scale: f64, y_scale: f64) {
-        let x_scale = util::float_to_fixed(x_scale);
-        let y_scale = util::float_to_fixed(y_scale);
+        let x_scale = util::f64_to_fixed(x_scale);
+        let y_scale = util::f64_to_fixed(y_scale);
         unsafe { sys::hb_font_set_scale(self.raw, x_scale, y_scale); }
     }
 }

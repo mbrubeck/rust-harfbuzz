@@ -11,6 +11,7 @@
 
 use std;
 use sys;
+use util;
 
 #[derive(Copy, Clone)]
 pub struct Glyphs<'a> {
@@ -72,6 +73,22 @@ impl<'a> Glyph<'a> {
     /// Not valid (and may panic) if called after shaping.
     pub fn to_char(&self) -> char {
         std::char::from_u32(self.id()).expect("not a Unicode code point")
+    }
+
+    pub fn x_advance(&self) -> f64 {
+        util::fixed_to_f64(self.raw_position().x_advance)
+    }
+
+    pub fn y_advance(&self) -> f64 {
+        util::fixed_to_f64(self.raw_position().y_advance)
+    }
+
+    pub fn x_offset(&self) -> f64 {
+        util::fixed_to_f64(self.raw_position().x_offset)
+    }
+
+    pub fn y_offset(&self) -> f64 {
+        util::fixed_to_f64(self.raw_position().y_offset)
     }
 
     /// Access to the raw `hb_glyph_info_t`
