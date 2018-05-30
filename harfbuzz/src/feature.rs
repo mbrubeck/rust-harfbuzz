@@ -12,6 +12,7 @@
 use std;
 use sys;
 
+#[derive(Clone, Default)]
 pub struct Features {
     features: Vec<sys::hb_feature_t>,
 }
