@@ -63,6 +63,7 @@ pub struct Glyph<'a> {
 
 impl<'a> Glyph<'a> {
     /// Either a Unicode code point (before shaping) or a glyph ID (after shaping)
+    #[inline]
     pub fn id(&self) -> u32 {
         self.raw_info().codepoint
     }
@@ -71,32 +72,39 @@ impl<'a> Glyph<'a> {
     /// code point as a `char`.
     ///
     /// Not valid (and may panic) if called after shaping.
+    #[inline]
     pub fn to_char(&self) -> char {
         std::char::from_u32(self.id()).expect("not a Unicode code point")
     }
 
+    #[inline]
     pub fn x_advance(&self) -> f64 {
         util::fixed_to_f64(self.raw_position().x_advance)
     }
 
+    #[inline]
     pub fn y_advance(&self) -> f64 {
         util::fixed_to_f64(self.raw_position().y_advance)
     }
 
+    #[inline]
     pub fn x_offset(&self) -> f64 {
         util::fixed_to_f64(self.raw_position().x_offset)
     }
 
+    #[inline]
     pub fn y_offset(&self) -> f64 {
         util::fixed_to_f64(self.raw_position().y_offset)
     }
 
     /// Access to the raw `hb_glyph_info_t`
+    #[inline]
     pub fn raw_info(&self) -> &sys::hb_glyph_info_t {
         unsafe { &*self.info }
     }
 
     /// Access to the raw `hb_glyph_position_t`
+    #[inline]
     pub fn raw_position(&self) -> &sys::hb_glyph_position_t {
         unsafe { &*self.position }
     }
